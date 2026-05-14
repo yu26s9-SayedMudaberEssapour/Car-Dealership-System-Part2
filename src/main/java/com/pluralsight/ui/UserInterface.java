@@ -46,6 +46,12 @@ public class UserInterface {
         //a loop that will display the menu
 
         do {
+            //add another option called Sell/Lease A vehicle
+            //Collect basic sales info from the user
+            //add the vehicle information to the contract
+            //ask if it is a sale or lease (if a vehicle is over 3 years old you can't lease it
+            //calculate the pricing of the vehicle.
+
             System.out.println("""
                 
                 Welcome to Sayed's Dealership!!

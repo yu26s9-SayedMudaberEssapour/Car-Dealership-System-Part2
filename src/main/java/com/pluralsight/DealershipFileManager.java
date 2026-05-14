@@ -80,17 +80,6 @@ public class DealershipFileManager {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     //this method should save the data
     public void saveDealership(Dealership dealership){
         //this will be reading from the dealership objects array
