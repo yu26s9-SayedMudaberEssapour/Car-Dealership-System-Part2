@@ -1,6 +1,7 @@
 package com.pluralsight;
 
 import com.pluralsight.DataModel.SalesContract;
+import com.pluralsight.Dealership.Dealership;
 import com.pluralsight.Dealership.Vehicle;
 import com.pluralsight.ui.UserInterface;
 
@@ -12,8 +13,6 @@ public class Main {
         //Program will be responsible for starting the application via its main() method and
         //then creating the user interface and getting it started.
 
-        UserInterface ui = new UserInterface();
-        ui.display();
 
         //77439|2020|Nissan|Altima|Sedan|Blue|32112|17995.0
 //        Vehicle honda = new Vehicle(77439,2020,"Nissan", "Altima", "Sedan", "Blue", 32112, 17995.0);
@@ -24,6 +23,12 @@ public class Main {
 //        //System.out.println(sc.getCurrentPrice());
 //        System.out.println(sc.getCurrentPrice());
 //        System.out.println(sc.getMonthlyPayment());
+
+        UserInterface ui = new UserInterface();
+
+        ui.display();
+
+
 
 
 

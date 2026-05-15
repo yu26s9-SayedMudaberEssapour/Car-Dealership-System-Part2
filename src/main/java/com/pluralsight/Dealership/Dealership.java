@@ -53,10 +53,8 @@ public class Dealership {
 
 
 
-
-    public List<Vehicle> getVehicleByPrice(double min, double max)
-
-    {
+    //all the specialized methods here
+    public List<Vehicle> getVehicleByPrice(double min, double max) {
         List<Vehicle> priceRange = new ArrayList<>();
         for(Vehicle v : inventory){
             if((v.getPrice() <= max) && (v.getPrice() >= min)){
@@ -65,9 +63,6 @@ public class Dealership {
         }
         return priceRange;
     }
-
-
-
 
 
     public List<Vehicle> getVehiclesByMakeModel(String make, String model){
@@ -83,10 +78,7 @@ public class Dealership {
     }
 
 
-
-    public List<Vehicle> getVehiclesByYear(int minYear, int maxYear)
-
-    {
+    public List<Vehicle> getVehiclesByYear(int minYear, int maxYear) {
         List<Vehicle> yearRange = new ArrayList<>();
         for(Vehicle v : inventory){
             if((v.getYear() <= maxYear) && (v.getYear() >= minYear)){
@@ -97,9 +89,7 @@ public class Dealership {
 
     }
 
-    public List<Vehicle> getVehiclesByColor(String color){
-
-        List<Vehicle> colors = new ArrayList<>();
+    public List<Vehicle> getVehiclesByColor(String color){List<Vehicle> colors = new ArrayList<>();
         for(Vehicle v : inventory){
             if(v.getColor().equalsIgnoreCase(color)){
                 colors.add(v);
@@ -126,9 +116,6 @@ public class Dealership {
         return miles;
     }
 
-
-
-
     public List<Vehicle> getVehiclesByType(String type){
 
 
@@ -140,6 +127,21 @@ public class Dealership {
         }
         return types;
     }
+
+
+    //this returns the vehicle given a vin number
+    //if the vehicle does not exist it will return null
+    public Vehicle getVehiclesByVin(int vin){
+
+        for(Vehicle v : inventory){
+            if(v.getVin() == vin){
+                return v;
+            }
+        }
+        return null;
+    }
+
+
 
 
     //add functionality

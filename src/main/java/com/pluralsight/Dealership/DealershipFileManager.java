@@ -8,12 +8,13 @@ import java.io.IOException;
 public class DealershipFileManager {
 
 
+    //this is the inventory of cars in the dealership
     public String file = "src/main/java/com/WorkshopFiles/WorkshopFiles/inventory.csv";
 
-
-
+    //this method will be getting the dealership
+    //this method will add the vehicles inside of an array temporarily.
     public Dealership getDealership() {
-        //add the information about the dealerhip here
+        //add the information about the dealership here
 
         Dealership dealership = null;
         try{
@@ -35,7 +36,6 @@ public class DealershipFileManager {
             while((line = br.readLine()) != null){
                 Vehicle vehicle = getVehicle(line);
 
-
                 dealership.addVehicle(vehicle);
 
             }
@@ -51,6 +51,8 @@ public class DealershipFileManager {
     return dealership;
     }
 
+
+    //this is a helper method for getDealership
     private static Vehicle getVehicle(String line) {
         String[] split = line.split("\\|");
         //10112|1993|Ford|Explorer|SUV|Red|525123|995.00
@@ -81,6 +83,7 @@ public class DealershipFileManager {
 
 
     //this method should save the data
+    // write back to the file and saves it whenever this is called.
     public void saveDealership(Dealership dealership){
         //this will be reading from the dealership objects array
         //then it will be adding them all to the file again.

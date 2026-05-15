@@ -1,6 +1,7 @@
 package com.pluralsight.ui;
 
 import com.pluralsight.DataModel.LeaseContract;
+import com.pluralsight.DataModel.SalesContract;
 import com.pluralsight.Dealership.Dealership;
 import com.pluralsight.Dealership.DealershipFileManager;
 import com.pluralsight.Dealership.Vehicle;
@@ -20,12 +21,6 @@ public class UserInterface {
     //method and then display the vehicles it returns.)
 
 
-    //Dealership PriorityToyota = new Dealership()
-
-    //this class will instantiate dealership
-
-
-
     //____________________________________________________
     //Get all the list options working and then work on add and remove
     //vehicles
@@ -33,9 +28,6 @@ public class UserInterface {
 
 
     private Dealership dealership;
-
-
-
 
     private void init(){
         DealershipFileManager dlf = new DealershipFileManager();
@@ -134,6 +126,7 @@ public class UserInterface {
 
 
     //this is a helper method
+    //that is used to display vehicle based on what is being given as data
     private void displayVehicle(List vehicle){
 
         //I should be displaying vehicles here
@@ -146,7 +139,6 @@ public class UserInterface {
         System.out.println("(-------------------------------------------------------End of Vehicles--------------------------------------------------------------)");
 
     }
-
 
     /**
      * this method should take a minimum and a maximum value
@@ -164,7 +156,6 @@ public class UserInterface {
 
 
     }
-
 
     /**
      * this method will be returning cars based on the make and model.
@@ -217,7 +208,7 @@ public class UserInterface {
 
 
 
-
+    //called dealership file manager to save
     DealershipFileManager dlf = new DealershipFileManager();
     //IMPORTANT NOTE: Don't forget to have your UserInterface use the
     //DealershipFileManager to save the dealership each time the user adds or removes a
@@ -245,16 +236,6 @@ public class UserInterface {
 
     }
 
-
-
-    //IMPORTANT NOTE: Don't forget to have your UserInterface use the
-    //DealershipFileManager to save the dealership each time the user adds or removes a
-    //vehicle
-
-
-
-
-
     public void processRemoveVehicleRequest(){
 
         int vin = Console.promptForInt("Enter the vin of the Vehicle: ");
@@ -272,9 +253,6 @@ public class UserInterface {
         dlf.saveDealership(dealership);
     }
 
-
-
-
     public void processAllVehiclesRequest(){
 
         displayVehicle(dealership.getAllVehicles());
@@ -283,71 +261,63 @@ public class UserInterface {
 
 
 
-
-
+    //------------------------------sell Lease----------------------
     public void sellOrLease(){
 
+        //use instanceof to differentiate between lease and sale
         int vin = Console.promptForInt("Please enter the vin number of the car: ");
-
-        System.out.println("add the info on contract");
-
 
         String date = Console.promptForString("Enter the date: ");
         String customerName = Console.promptForString("Enter customers Name: ");
         String email = Console.promptForString("Enter your email address: ");
-        Vehicle vehicle = Contract.getVehicleSold();
+
+        //gets vin number goes into the dealership and finds the vehicle and returns it.
+        Vehicle vehicle = dlf.getDealership().getVehiclesByVin(vin);
 
         String saleOrLease = Console.promptForString("Is it a sale or lease: ");
-        //here I should account for the edge case where a car older than 3 years can't be leased
+
+        Contract contract;
         if(saleOrLease.equalsIgnoreCase("lease")){
-            leaseStuff(date, customerName, email, vehicle);
+            contract = new LeaseContract(date, customerName, email, vehicle);
+        }
+        else{
 
+            //there is a fifth whether they want finance or not
+            contract = new SalesContract(date, customerName, email, vehicle, "yes");
         }
-        else if(saleOrLease.equalsIgnoreCase("sale")){
-            saleStuff(date, customerName, email, vehicle);
+
+        if(contract instanceof LeaseContract){
+            LeaseContract lc = (LeaseContract) contract;
+
+            try{
+                FileWriter fr = new FileWriter("Contract.csv", true);
+
+                fr.write("LEASE" + "|" + date + "|" +customerName+ "|" + email + "|" +vehicle+ "|" + lc.getExpectedEnding() + "|" + lc.getLeaseFee() + "|" + lc.getTotalPrice() + "|" + lc.getMonthlyPayment()+ "\n");
+                fr.close();
+            }
+
+            catch (IOException e){
+                e.getMessage();
+            }
         }
+
+        if(contract instanceof SalesContract){
+            SalesContract sc = (SalesContract) contract;
+            try{
+                FileWriter fr = new FileWriter("Contract.csv", true);
+
+                fr.write("SALE" + "|" + date + "|" +customerName+ "|" + email + "|" +vehicle+ "|" + sc.getRecordingFee() + "|" + sc.getProcessingFee() + "|" + sc.getTotalPrice() + "|" + sc.getWantFinance() + "|" + sc.getMonthlyPayment() + "\n");
+                fr.close();
+            }
+            catch (IOException e){
+                e.getMessage();
+            }
+        }
+
+
+        //here I should account for the edge case where a car older than 3 years can't be leased
 
     }
-
-    public void leaseStuff(String date, String customerName, String email, Vehicle vehicle){
-
-
-        LeaseContract lc = new LeaseContract(date, customerName, email, vehicle);
-
-        lc.getTotalPrice();
-
-        try{
-            FileWriter fr = new FileWriter("Contract");
-
-            fr.write("LEASE" + "|" + date + "|" +customerName+ "|" +email+ "|" +vehicle+ "|" + lc.getExpectedEnding() + "|" + lc.getLeaseFee() + "|" + lc.getTotalPrice() + "|" + lc.getMonthlyPayment());
-
-        }
-        catch (IOException e){
-            e.getMessage();
-        }
-        //LEASE:
-        //EXPECTED_ENDING_VALUE|LEASE_FEE|TOTAL_PRICE|MONTHLY_PAYMENT
-
-        //LEASE|20210928|Zachary Westly|zach@texas.com|37846|2021|
-        //Chevrolet|Silverado|truck|Black|2750|31995.00|
-        //15997.50|2239.65| 18237.15| 540.72
-    }
-
-
-    public void saleStuff(String date, String customerName, String email, Vehicle vehicle){
-
-
-        //SALES_TAX|RECORDING_FEE|PROCESSING_FEE|TOTAL_PRICE|FINANCE_OPTION
-        //|MONTHLY_PAYMENT
-
-        //SALE|20210928|Dana Wyatt|dana@texas.com|10112|1993|
-        //Ford|Explorer|SUV|Red|525123|995.00|
-        //49.75|100.00|295.00|1439.75|NO|0.00
-        LeaseContract lc = new LeaseContract(date, customerName, email, vehicle);
-
-        lc.getTotalPrice();
-    }
-
 
 
 

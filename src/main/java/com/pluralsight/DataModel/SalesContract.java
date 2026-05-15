@@ -9,6 +9,12 @@ public class SalesContract extends Contract {
     private String wantFinance; //yes/no
 
 
+    double currentPrice = getCurrentPrice();
+    private double processingFee = (currentPrice >= 10000) ? 495 : 295;
+
+    public double getProcessingFee() {
+        return processingFee;
+    }
 
     public SalesContract(String Date, String customerName, String email, Vehicle vehicleSold, String wantFinance) {
         super(Date, customerName, email, vehicleSold);
@@ -35,7 +41,6 @@ public class SalesContract extends Contract {
     @Override
     public double getTotalPrice(){
         double currentPrice = getCurrentPrice();
-        double processingFee = 0;
         double taxAmount = currentPrice * salesTax;
 
         double totalPrice = 0;
@@ -44,6 +49,9 @@ public class SalesContract extends Contract {
 
         return (currentPrice + taxAmount + processingFee + recordingFee);
     };
+
+
+
 
     @Override
     public  double getMonthlyPayment(){

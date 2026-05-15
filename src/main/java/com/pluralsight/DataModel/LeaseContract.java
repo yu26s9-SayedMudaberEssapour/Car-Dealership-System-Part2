@@ -56,7 +56,7 @@ public class LeaseContract extends Contract{
         //figure out the amountFinanced
 
 
-        
+
         //find total with interest
 
 
