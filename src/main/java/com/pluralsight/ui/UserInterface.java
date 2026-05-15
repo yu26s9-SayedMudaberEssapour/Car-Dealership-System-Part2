@@ -1,12 +1,16 @@
 package com.pluralsight.ui;
 
-import com.pluralsight.Dealership;
-import com.pluralsight.DealershipFileManager;
-import com.pluralsight.Vehicle;
+import com.pluralsight.DataModel.LeaseContract;
+import com.pluralsight.Dealership.Dealership;
+import com.pluralsight.Dealership.DealershipFileManager;
+import com.pluralsight.Dealership.Vehicle;
 
-import java.lang.classfile.CodeModel;
-import java.util.ArrayList;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
+
+import com.pluralsight.DataModel.Contract;
 
 public class UserInterface {
 
@@ -66,6 +70,7 @@ public class UserInterface {
                 7 - List ALL vehicles
                 8 - Add a vehicle
                 9 - Remove a vehicle
+                10 - Sale/Lease
                 99 - Quit \n
                 """);
             userInput = Console.promptForString("Your Response: ");
@@ -107,6 +112,10 @@ public class UserInterface {
                 case "9" :
                     processRemoveVehicleRequest();
                     break;
+                case "10" :
+                    sellOrLease();
+                    break;
+
 
                 case "99" :
                     System.out.println("You have exited the application: "
@@ -245,6 +254,7 @@ public class UserInterface {
 
 
 
+
     public void processRemoveVehicleRequest(){
 
         int vin = Console.promptForInt("Enter the vin of the Vehicle: ");
@@ -269,6 +279,73 @@ public class UserInterface {
 
         displayVehicle(dealership.getAllVehicles());
 
+    }
+
+
+
+
+
+    public void sellOrLease(){
+
+        int vin = Console.promptForInt("Please enter the vin number of the car: ");
+
+        System.out.println("add the info on contract");
+
+
+        String date = Console.promptForString("Enter the date: ");
+        String customerName = Console.promptForString("Enter customers Name: ");
+        String email = Console.promptForString("Enter your email address: ");
+        Vehicle vehicle = Contract.getVehicleSold();
+
+        String saleOrLease = Console.promptForString("Is it a sale or lease: ");
+        //here I should account for the edge case where a car older than 3 years can't be leased
+        if(saleOrLease.equalsIgnoreCase("lease")){
+            leaseStuff(date, customerName, email, vehicle);
+
+        }
+        else if(saleOrLease.equalsIgnoreCase("sale")){
+            saleStuff(date, customerName, email, vehicle);
+        }
+
+    }
+
+    public void leaseStuff(String date, String customerName, String email, Vehicle vehicle){
+
+
+        LeaseContract lc = new LeaseContract(date, customerName, email, vehicle);
+
+        lc.getTotalPrice();
+
+        try{
+            FileWriter fr = new FileWriter("Contract");
+
+            fr.write("LEASE" + "|" + date + "|" +customerName+ "|" +email+ "|" +vehicle+ "|" + lc.getExpectedEnding() + "|" + lc.getLeaseFee() + "|" + lc.getTotalPrice() + "|" + lc.getMonthlyPayment());
+
+        }
+        catch (IOException e){
+            e.getMessage();
+        }
+        //LEASE:
+        //EXPECTED_ENDING_VALUE|LEASE_FEE|TOTAL_PRICE|MONTHLY_PAYMENT
+
+        //LEASE|20210928|Zachary Westly|zach@texas.com|37846|2021|
+        //Chevrolet|Silverado|truck|Black|2750|31995.00|
+        //15997.50|2239.65| 18237.15| 540.72
+    }
+
+
+    public void saleStuff(String date, String customerName, String email, Vehicle vehicle){
+
+
+        //SALES_TAX|RECORDING_FEE|PROCESSING_FEE|TOTAL_PRICE|FINANCE_OPTION
+        //|MONTHLY_PAYMENT
+
+        //SALE|20210928|Dana Wyatt|dana@texas.com|10112|1993|
+        //Ford|Explorer|SUV|Red|525123|995.00|
+        //49.75|100.00|295.00|1439.75|NO|0.00
+        LeaseContract lc = new LeaseContract(date, customerName, email, vehicle);
+
+        lc.getTotalPrice();
     }
 
 

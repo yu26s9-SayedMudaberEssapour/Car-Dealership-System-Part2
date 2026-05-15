@@ -1,18 +1,17 @@
-package com.pluralsight.Contract;
+package com.pluralsight.DataModel;
 
-import com.pluralsight.Vehicle;
+import com.pluralsight.Dealership.Vehicle;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
 public abstract class Contract {
 
     protected String Date; //this will be date of the contract
     protected String CustomerName;
     protected String email;
-    protected Vehicle VehicleSold;
+    protected static Vehicle VehicleSold;
     protected double totalPrice;
     protected double monthlyPayment;
 
@@ -48,7 +47,7 @@ public abstract class Contract {
         CustomerName = customerName;
     }
 
-    public Vehicle getVehicleSold() {
+    public static Vehicle getVehicleSold() {
         return VehicleSold;
     }
 
@@ -75,9 +74,11 @@ public abstract class Contract {
                 String[] part = line.split("\\|");
 
                 int vin = Integer.parseInt(part[0]);
+                int vehicleSoldVin = getVehicleSold().getVin();
 
-                if(vin == getVehicleSold().getVin()){
+                if(vin == vehicleSoldVin){
                     price += Double.parseDouble(part[7]);
+                    break;
                 }
 
             }

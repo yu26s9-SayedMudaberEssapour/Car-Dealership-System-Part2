@@ -1,6 +1,6 @@
-package com.pluralsight.ui;
+package com.pluralsight.Dealership;
 
-import com.pluralsight.Vehicle;
+import com.pluralsight.ui.Console;
 
 import java.util.ArrayList;
 
